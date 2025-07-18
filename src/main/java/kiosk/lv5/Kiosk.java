@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Kiosk {
 
-    private List<Menu> menus;
+    private final List<Menu> menus;
 
     public Kiosk(List<Menu> menus) {
         this.menus = menus;
@@ -58,7 +58,7 @@ public class Kiosk {
             } catch (InputMismatchException e) {
                 System.out.println("숫자를 입력해주세요.");
                 sc.nextLine(); // 버퍼 비우기
-                continue;
+
             }
 
         }
@@ -69,7 +69,7 @@ public class Kiosk {
     public void displayMainMenu() {
         System.out.println("[ MAIN MENU ]");
         for (int i = 0; i < this.menus.size(); i++) {
-            System.out.println((i + 1) + ". " + menus.get(i).category);
+            System.out.println((i + 1) + ". " + menus.get(i).getCategory());
         }
         System.out.println("0. 종료");
 
@@ -77,7 +77,7 @@ public class Kiosk {
 
     //카테고리 출력 메서드
     public void displayCategoryMenu(Menu menu) {
-        System.out.println("\n[ " + menu.category + " MENU ]");
+        System.out.println("\n[ " + menu.getCategory() + " MENU ]");
 
         for (int i = 0; i < menu.getMenuItems().size(); i++) {
             MenuItem item = menu.getMenuItems().get(i);
