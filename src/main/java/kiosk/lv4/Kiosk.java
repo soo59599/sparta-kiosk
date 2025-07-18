@@ -11,7 +11,7 @@ public class Kiosk {
         this.menus = menus;
     }
 
-    public void start(){
+    public void start() {
         Scanner sc = new Scanner(System.in);
 
         outer:
@@ -24,22 +24,33 @@ public class Kiosk {
                 }
                 System.out.println("0. 종료");
 
-                //첫번째 메인 메뉴 선택
-                int choose1 = sc.nextInt();
+                //첫번째 메인 메뉴 선택(인덱스 편의를 위해 -1)
+                int categoryChoice = sc.nextInt()-1;
 
                 //메인메뉴에서 종료 선택
-                if (choose1 == 0) {
+                if (categoryChoice == -1) {
                     System.out.println("프로그램을 종료합니다.");
                     break;
                 }
 
                 //메인메뉴에서 카테고리 선택
-                if (0 < choose1 && choose1 < this.menus.size()+1) {
-                    System.out.println("[ "+ menus.get(choose1-1).category +" MENU ]");
+                if (-1 < categoryChoice && categoryChoice < menus.size()) {
+                    Menu chosenMenu = menus.get(categoryChoice);
+
+                    System.out.println("[ " + chosenMenu.category + " MENU ]\n");
+
+                    for(int i = 0; i < chosenMenu.getMenuItems().size(); i++) {
+                        MenuItem item = chosenMenu.getMenuItems().get(i);
+                        System.out.printf("%d. %-15s | W %6.1f | %s%n",
+                                i + 1,
+                                item.getName(),
+                                item.getPrice(),
+                                item.getDescription());
+                    }
                 } else {
                     throw new IllegalArgumentException("잘못된 입력입니다.");
                 }
-            }catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
 
