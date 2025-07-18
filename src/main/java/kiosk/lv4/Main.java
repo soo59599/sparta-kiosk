@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //햄버거 메뉴
         List<MenuItem> menuItems = Arrays.asList(
         new MenuItem("ShackBurger", BigDecimal.valueOf(6.9), "토마토, 양상추, 쉑소스가 토핑된 치즈버거"),
         new MenuItem("SmokeShack", BigDecimal.valueOf(8.9), "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거"),
@@ -15,8 +16,13 @@ public class Main {
         new MenuItem("Hamburger", BigDecimal.valueOf(5.4), "비프패티를 기반으로 야채가 들어간 기본버거")
         );
 
-        Menu menu = new Menu("BURGER", menuItems);
-        Kiosk kiosk = new Kiosk(menu);
+        Menu bugerMenu = new Menu("BURGER", menuItems);
+
+        List<Menu> menus = Arrays.asList(
+                bugerMenu
+        );
+
+        Kiosk kiosk = new Kiosk(menus);
 
         kiosk.start();
     }

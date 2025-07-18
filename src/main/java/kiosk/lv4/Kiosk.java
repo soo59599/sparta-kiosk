@@ -1,15 +1,14 @@
 package kiosk.lv4;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Kiosk {
 
-    private Menu menu;
+    private List<Menu> menus;
 
-    public Kiosk(Menu menu) {
-        this.menu = menu;
+    public Kiosk(List<Menu> menus) {
+        this.menus = menus;
     }
 
     public void start(){
@@ -17,43 +16,34 @@ public class Kiosk {
 
         outer:
         while (true) {
-            System.out.println("[ MAIN MENU ]");
-
-            System.out.println("[ SHAKESHACK MENU ]");
-            List<MenuItem> menuItems = menu.getMenuItems();
-            for (int i = 0; i < menuItems.size(); i++) {
-                MenuItem menuItem = menuItems.get(i);
-                System.out.println((i + 1) + ". " + menuItem.getName() + " | W " + menuItem.getPrice() + " | " + menuItem.getDescription());
-            }
-
             try {
-                int choose = sc.nextInt();
-
-                switch (choose) {
-                    case 1:
-                        System.out.println("ShackBurger 주문이 되었습니다.");
-                        break;
-                    case 2:
-                        System.out.println("SmokeShack 주문이 되었습니다.");
-                        break;
-                    case 3:
-                        System.out.println("Cheeseburger 주문이 되었습니다.");
-                        break;
-                    case 4:
-                        System.out.println("Hamburger 주문이 되었습니다.");
-                        break;
-                    case 0:
-                        System.out.println("프로그램을 종료합니다.");
-                        break outer;
-
-                    default:
-                        throw new IllegalArgumentException("0~4번중에 입력하세요");
+                //첫번째 메인 메뉴
+                System.out.println("[ MAIN MENU ]");
+                for (int i = 0; i < this.menus.size(); i++) {
+                    System.out.println((i + 1) + ". " + menus.get(i).category);
                 }
-            } catch (IllegalArgumentException e) {
+                System.out.println("0. 종료");
+
+                //첫번째 메인 메뉴 선택
+                int choose1 = sc.nextInt();
+
+                //메인메뉴에서 종료 선택
+                if (choose1 == 0) {
+                    System.out.println("프로그램을 종료합니다.");
+                    break;
+                }
+
+                //메인메뉴에서 카테고리 선택
+                if (0 < choose1 && choose1 < this.menus.size()+1) {
+                    System.out.println("[ "+ menus.get(choose1-1).category +" MENU ]");
+                } else {
+                    throw new IllegalArgumentException("잘못된 입력입니다.");
+                }
+            }catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
 
         }
-        sc.close();
+
     }
 }
