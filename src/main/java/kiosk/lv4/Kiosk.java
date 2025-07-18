@@ -24,8 +24,8 @@ public class Kiosk {
                 }
                 System.out.println("0. 종료");
 
-                //첫번째 메인 메뉴 선택(인덱스 편의를 위해 -1)
-                int categoryChoice = sc.nextInt()-1;
+                //첫번째 선택:메인에서 카테고리 고르기 (인덱스 편의를 위해 -1)
+                int categoryChoice = sc.nextInt() - 1;
 
                 //메인메뉴에서 종료 선택
                 if (categoryChoice == -1) {
@@ -33,13 +33,13 @@ public class Kiosk {
                     break;
                 }
 
-                //메인메뉴에서 카테고리 선택
+                //카테고리 메뉴
                 if (-1 < categoryChoice && categoryChoice < menus.size()) {
                     Menu chosenMenu = menus.get(categoryChoice);
 
-                    System.out.println("[ " + chosenMenu.category + " MENU ]\n");
+                    System.out.println("\n[ " + chosenMenu.category + " MENU ]");
 
-                    for(int i = 0; i < chosenMenu.getMenuItems().size(); i++) {
+                    for (int i = 0; i < chosenMenu.getMenuItems().size(); i++) {
                         MenuItem item = chosenMenu.getMenuItems().get(i);
                         System.out.printf("%d. %-15s | W %6.1f | %s%n",
                                 i + 1,
@@ -47,6 +47,23 @@ public class Kiosk {
                                 item.getPrice(),
                                 item.getDescription());
                     }
+                    System.out.println("0. 뒤로가기");
+
+                    //두번째 선택: 아이템고르기 (인덱스 편의를 위해 -1)
+                    int itemChoice = sc.nextInt() - 1;
+
+                    if (itemChoice == -1) {
+                        continue;
+                    }
+
+                    if (-1 < itemChoice && itemChoice < chosenMenu.getMenuItems().size()) {
+                        MenuItem chosenItem = chosenMenu.getMenuItems().get(itemChoice);
+                        System.out.printf("선택한 메뉴: %s | W %.1f | %s%n",
+                                chosenItem.getName(),
+                                chosenItem.getPrice(),
+                                chosenItem.getDescription());
+                    }
+
                 } else {
                     throw new IllegalArgumentException("잘못된 입력입니다.");
                 }
