@@ -3,9 +3,9 @@ package kiosk.lv5;
 import java.math.BigDecimal;
 
 public class MenuItem {
-    private final String name;
-    private final BigDecimal price;
-    private final String description;
+    private String name;
+    private BigDecimal price;
+    private String description;
 
     public  MenuItem(String name, BigDecimal price, String description) {
         this.name = name;
@@ -13,6 +13,7 @@ public class MenuItem {
         this.description = description;
     }
 
+    //Getter
     public String getName() {
         return name;
     }
@@ -23,5 +24,18 @@ public class MenuItem {
 
     public String getDescription() {
         return description;
+    }
+
+    // Setter
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -5,20 +5,30 @@ import java.util.List;
 
 public class Menu {
 
-    private final String category;
+    private String category;
 
-    List<MenuItem> menuItems = new ArrayList<>();
+    private List<MenuItem> menuItems = new ArrayList<>();
 
     public Menu(String category, List<MenuItem> menuItems) {
         this.category = category;
         this.menuItems = menuItems;
     }
 
-    public List<MenuItem> getMenuItems() {
-        return menuItems.stream().toList();
+    // Getter
+    public String getCategory() {
+        return this.category;
     }
 
-    public String getCategory(){
-        return this.category;
+    public List<MenuItem> getMenuItems() {
+        return new ArrayList<>(menuItems);
+    }
+
+    // Setter
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = menuItems;
     }
 }
