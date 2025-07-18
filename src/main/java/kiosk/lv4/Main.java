@@ -15,7 +15,8 @@ public class Main {
         new MenuItem("Hamburger", BigDecimal.valueOf(5.4), "비프패티를 기반으로 야채가 들어간 기본버거")
         );
 
-        Kiosk kiosk = new Kiosk(menuItems);
+        Menu menu = new Menu("BURGER", menuItems);
+        Kiosk kiosk = new Kiosk(menu);
 
         kiosk.start();
     }

@@ -6,21 +6,24 @@ import java.util.Scanner;
 
 public class Kiosk {
 
-    List<MenuItem> menuItems = new ArrayList<>();
+    private Menu menu;
 
-    public Kiosk(List<MenuItem> menuItems) {
-        this.menuItems = menuItems;
+    public Kiosk(Menu menu) {
+        this.menu = menu;
     }
 
-    void start(){
+    public void start(){
         Scanner sc = new Scanner(System.in);
 
         outer:
         while (true) {
+            System.out.println("[ MAIN MENU ]");
 
             System.out.println("[ SHAKESHACK MENU ]");
-            for (MenuItem menuItem : menuItems) {
-                System.out.println(menuItem.name + "| w " + menuItem.price + "|" + menuItem.description);
+            List<MenuItem> menuItems = menu.getMenuItems();
+            for (int i = 0; i < menuItems.size(); i++) {
+                MenuItem menuItem = menuItems.get(i);
+                System.out.println((i + 1) + ". " + menuItem.getName() + " | W " + menuItem.getPrice() + " | " + menuItem.getDescription());
             }
 
             try {
