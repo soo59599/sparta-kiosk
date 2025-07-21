@@ -63,7 +63,7 @@ public class Kiosk {
 
                         if (cartItemChoice == 1) {
                             System.out.println(chosenItem.getName() + " 이 장바구니에 추가되었습니다.");
-                            cart.increaseCartItemQuantity(new CartItem(chosenItem, 1));
+                            cart.increaseItemQuantity(new CartItem(chosenItem, 1));
                         } else if (cartItemChoice == 2) {
                             System.out.println("메인 메뉴로 돌아갑니다.");
                         } else {
@@ -79,7 +79,7 @@ public class Kiosk {
                     System.out.println("1. 주문      2. 메뉴판");
                     int orderChoice = sc.nextInt();
                     if (orderChoice == 1) {
-                        System.out.println("주문이 완료되었습니다. 금액은 W " + cart.getTotalPrice() + " 입니다.");
+                        System.out.println("주문이 완료되었습니다. 금액은 W " + cart.getCartTotalPrice() + " 입니다.");
                         break outer;
                     } else if (orderChoice == 2) {
                         return;
@@ -136,6 +136,6 @@ public class Kiosk {
             System.out.printf("%d. %-15s | W %6.1f | %s%n", i + 1, cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getMenuItemDescription());
         }
         System.out.println("[ Total ]");
-        System.out.println("W " + cart.getTotalPrice());
+        System.out.println("W " + cart.getCartTotalPrice());
     }
 }

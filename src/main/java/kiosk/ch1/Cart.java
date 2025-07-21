@@ -30,7 +30,7 @@ public class Cart {
     }
 
     //아이템 넣기
-    public void increaseCartItemQuantity(CartItem cartItemToAdd) {
+    public void increaseItemQuantity(CartItem cartItemToAdd) {
         Optional<CartItem> existingItem = findCartItem(cartItemToAdd.getMenuItemId());
         if(existingItem.isPresent()) {
             existingItem.get().increaseQuantity(cartItemToAdd.getQuantity());
@@ -57,7 +57,7 @@ public class Cart {
     }
 
     //카트에 담긴 총 금액 확인
-    public BigDecimal getTotalPrice() {
+    public BigDecimal getCartTotalPrice() {
         BigDecimal totalPrice = new BigDecimal(0);
         for(int i = 0 ; i < cartItems.size() ; i++){
             totalPrice = cartItems.get(i).getTotalPrice().add(totalPrice);
