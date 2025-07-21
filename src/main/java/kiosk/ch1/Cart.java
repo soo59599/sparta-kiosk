@@ -3,6 +3,7 @@ package kiosk.ch1;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Cart {
 
@@ -18,26 +19,42 @@ public class Cart {
         return new ArrayList<>(cartItems);
     }
 
-    //아이템 넣기
-    public void addCartItems(CartItem cartItems) {
+    //카트안에 아이템 있는지 찾기
+    private Optional<CartItem> findCartItem(String menuItemId) {
         for (CartItem cartItem : this.cartItems) {
-            if (cartItem.getMenuItemId().equals(cartItems.getMenuItemId())) {
-                cartItem.increaseQuantity(cartItems.getQuantity());
-                return;
+            if (cartItem.getMenuItemId().equals(menuItemId)) {
+                return Optional.of(cartItem);
             }
         }
-        this.cartItems.add(cartItems);
+        return Optional.empty();
+    }
+
+
+    //아이템 넣기
+    public void addCartItems(CartItem cartItemToAdd) {
+        Optional<CartItem> existingItem = findCartItem(cartItemToAdd.getMenuItemId());
+        if(existingItem.isPresent()) {
+            existingItem.get().increaseQuantity(cartItemToAdd.getQuantity());
+        }else{
+            this.cartItems.add(cartItemToAdd);
+        }
     }
 
     //아이템 빼기
-    public void removeCartItems(CartItem cartItems) {
-        for (CartItem cartItem : this.cartItems) {
-            if (cartItem.getMenuItemId().equals(cartItems.getMenuItemId())) {
-                cartItem.decreaseQuantity(cartItems.getQuantity());
-                return;
-            }
+    public void decreaseItemQuantity(CartItem itemToRemove) {
+        Optional<CartItem> existingItem = findCartItem(itemToRemove.getMenuItemId());
+
+        if(existingItem.isEmpty()) {
+            System.out.println("해당 아이템이 카트에 없습니다.");
+            return;
         }
-        this.cartItems.remove(cartItems);
+
+        CartItem item = existingItem.get();
+        item.decreaseQuantity(item.getQuantity());
+
+        if(item.getQuantity() <= 0) {
+            this.cartItems.remove(item);
+        }
     }
 
     //카트에 담긴 총 금액 확인
