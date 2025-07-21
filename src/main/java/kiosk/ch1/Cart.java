@@ -31,7 +31,7 @@ public class Cart {
 
 
     //아이템 넣기
-    public void addCartItems(CartItem cartItemToAdd) {
+    public void addCartItem(CartItem cartItemToAdd) {
         Optional<CartItem> existingItem = findCartItem(cartItemToAdd.getMenuItemId());
         if(existingItem.isPresent()) {
             existingItem.get().increaseQuantity(cartItemToAdd.getQuantity());
