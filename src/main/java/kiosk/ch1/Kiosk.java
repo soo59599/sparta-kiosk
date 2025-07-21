@@ -63,7 +63,7 @@ public class Kiosk {
 
                         if (cartItemChoice == 1) {
                             System.out.println(chosenItem.getName() + " 이 장바구니에 추가되었습니다.");
-                            cart.addCartItem(new CartItem(chosenItem, 1));
+                            cart.increaseCartItemQuantity(new CartItem(chosenItem, 1));
                         } else if (cartItemChoice == 2) {
                             System.out.println("메인 메뉴로 돌아갑니다.");
                         } else {

@@ -9,6 +9,7 @@ public class CartItem {
 
     private int quantity;
 
+    //생성자
     public CartItem(MenuItem menuItem, int quantity) {
         if(menuItem == null) {
             throw new IllegalArgumentException("장바구니에 물건이 담기지 않았습니다.");
