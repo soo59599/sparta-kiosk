@@ -10,8 +10,8 @@ public class Cart {
     private final List<CartItem> cartItems;
 
     //생성자
-    public Cart (List<CartItem> cartItems){
-        this.cartItems = cartItems;
+    public Cart(){
+        this.cartItems = new ArrayList<>();
     }
 
     //장바구니 목록 보기

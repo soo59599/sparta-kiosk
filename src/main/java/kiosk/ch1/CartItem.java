@@ -24,6 +24,18 @@ public class CartItem {
         return menuItem.getId();
     }
 
+    public String getMenuItemName() {
+        return menuItem.getName();
+    }
+
+    public BigDecimal getMenuItemPrice() {
+        return menuItem.getPrice();
+    }
+
+    public String getMenuItemDescription() {
+        return menuItem.getDescription();
+    }
+
     public int getQuantity() {return quantity;}
 
     //총 금액 계산

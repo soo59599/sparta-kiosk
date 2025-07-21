@@ -12,6 +12,8 @@ public class Kiosk {
         this.menus = menus;
     }
 
+    private Cart cart;
+
     public void start() {
         Scanner sc = new Scanner(System.in);
 
@@ -82,6 +84,17 @@ public class Kiosk {
         for (int i = 0; i < menu.getMenuItems().size(); i++) {
             MenuItem item = menu.getMenuItems().get(i);
             System.out.printf("%d. %-15s | W %6.1f | %s%n", i + 1, item.getName(), item.getPrice(), item.getDescription());
+        }
+        System.out.println("0. 뒤로가기");
+    }
+
+    //장바구니 출력
+    public void displayCart(){
+        System.out.println("[ ORDER MENU ]");
+
+        for(int i = 0; i<cart.getCartItems().size();i++){
+            CartItem cartItem = cart.getCartItems().get(i);
+            System.out.printf("%d. %-15s | W %6.1f | %s%n", i + 1,cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getMenuItemDescription());
         }
         System.out.println("0. 뒤로가기");
     }
