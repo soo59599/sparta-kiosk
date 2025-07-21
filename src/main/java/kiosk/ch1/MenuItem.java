@@ -9,7 +9,7 @@ public class MenuItem {
     private BigDecimal price;
     private String description;
 
-    public  MenuItem(String name, BigDecimal price, String description) {
+    public MenuItem(String name, BigDecimal price, String description) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.price = price;
@@ -17,6 +17,8 @@ public class MenuItem {
     }
 
     //Getter
+    public String getId() {return id;}
+
     public String getName() {
         return name;
     }
