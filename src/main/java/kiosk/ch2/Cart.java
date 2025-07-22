@@ -12,7 +12,7 @@ public class Cart {
 
     //생성자
     public Cart(){
-        this.cartItems.stream().collect(Collectors.toList());
+        cartItems = new ArrayList<>();
     }
 
     //장바구니 목록 보기
@@ -20,32 +20,11 @@ public class Cart {
         return cartItems.stream().collect(Collectors.toList());
     }
 
-    //카트에서 특정 이름을 가진 아이템 제거
-    public void removeCartItem(CartItem cartItem) {
-        cartItems = cartItems.stream()
-                .filter(item -> !item.getMenuItemName().equals(cartItem.getMenuItemName()))
-                .collect(Collectors.toList());
-    }
-
-
-    //카트안에 아이템 있는지 찾기
-    private Optional<CartItem> findCartItem(String menuItemId) {
-        for (CartItem cartItem : this.cartItems) {
-            if (cartItem.getMenuItemId().equals(menuItemId)) {
-                return Optional.of(cartItem);
-            }
-        }
-        return Optional.empty();
-    }
-
     //아이템 넣기
     public void increaseItemQuantity(CartItem cartItemToAdd) {
-        Optional<CartItem> existingItem = findCartItem(cartItemToAdd.getMenuItemId());
-        if(existingItem.isPresent()) {
-            existingItem.get().increaseQuantity(cartItemToAdd.getQuantity());
-        }else{
-            this.cartItems.add(cartItemToAdd);
-        }
+        cartItems.stream().filter(item -> item.getMenuItemId().equals(cartItemToAdd.getMenuItemId()))
+                .findFirst()
+                .ifPresentOrElse(foundItem -> foundItem.increaseQuantity(cartItemToAdd.getQuantity()),()-> this.cartItems.add(cartItemToAdd));
     }
 
     //아이템 빼기
