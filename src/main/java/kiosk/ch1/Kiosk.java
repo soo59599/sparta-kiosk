@@ -12,22 +12,23 @@ public class Kiosk {
         this.menus = menus;
     }
 
-    private Cart cart = new Cart();
+    private final Cart cart = new Cart();
 
     public void start() {
         Scanner sc = new Scanner(System.in);
-        outer:
+
         while (true) {
             try {
                 //메인 메뉴 출력
                 displayMainMenu();
 
                 //장바구니에 아이템이 있을 때 오더 메뉴 출력
-                if (cart.getCartItems().size() != 0) {
+                if (!cart.getCartItems().isEmpty()) {
                     displayOrderMenu();
                 }
 
                 //첫번째 선택:메인에서 카테고리 고르기 (인덱스 편의를 위해 -1)
+                //사용자 입력: 메인 메뉴에서 카테고리 선택 (1~3: 카테고리, 4: 주문, 5: 취소, 0: 종료)
                 int selectedCategoryIndex = sc.nextInt() - 1;
 
                 //메인메뉴에서 종료 선택
@@ -74,17 +75,20 @@ public class Kiosk {
                         throw new IllegalArgumentException("잘못된 입력입니다.");
                     }
 
-                } else if (selectedCategoryIndex == 3) {
+                } else if (!cart.getCartItems().isEmpty() && selectedCategoryIndex == 3) {
                     displayCart();
                     System.out.println("1. 주문      2. 메뉴판");
                     int orderChoice = sc.nextInt();
                     if (orderChoice == 1) {
                         System.out.println("주문이 완료되었습니다. 금액은 W " + cart.getCartTotalPrice() + " 입니다.");
-                        break outer;
+                        break;
                     } else if (orderChoice == 2) {
-                        return;
+                        System.out.println("메뉴판으로 돌아갑니다.");
                     }
 
+                } else if (!cart.getCartItems().isEmpty() && selectedCategoryIndex == 4) {
+                    cart.cartClear();
+                    System.out.println("장바구니를 비웠습니다.");
                 } else {
                     throw new IllegalArgumentException("잘못된 입력입니다.");
                 }
@@ -93,7 +97,6 @@ public class Kiosk {
             } catch (InputMismatchException e) {
                 System.out.println("숫자를 입력해주세요.");
                 sc.nextLine(); // 버퍼 비우기
-
             }
 
         }
@@ -121,6 +124,7 @@ public class Kiosk {
         System.out.println("0. 뒤로가기");
     }
 
+    //오더메뉴 출력 메서드
     public void displayOrderMenu() {
         System.out.println("[ ORDER MENU ]");
         System.out.println("4. Orders       | 장바구니를 확인 후 주문합니다.");
@@ -133,7 +137,7 @@ public class Kiosk {
         System.out.println("[ Orders ]");
         for (int i = 0; i < cart.getCartItems().size(); i++) {
             CartItem cartItem = cart.getCartItems().get(i);
-            System.out.printf("%d. %-15s | W %6.1f | %s%n", i + 1, cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getMenuItemDescription());
+            System.out.printf("%d. %-15s | W %6.1f | %d개 | %s%n", i + 1, cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getQuantity(), cartItem.getMenuItemDescription());
         }
         System.out.println("[ Total ]");
         System.out.println("W " + cart.getCartTotalPrice());

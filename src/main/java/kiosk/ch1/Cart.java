@@ -64,4 +64,9 @@ public class Cart {
         }
         return totalPrice;
     }
+
+    //현재 주문취소(카트 비우기)
+    public void cartClear() {
+        this.cartItems.clear();
+    }
 }
