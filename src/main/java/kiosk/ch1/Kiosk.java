@@ -7,12 +7,12 @@ import java.util.Scanner;
 public class Kiosk {
 
     private final List<Menu> menus;
+    private final Cart cart = new Cart();
+
 
     public Kiosk(List<Menu> menus) {
         this.menus = menus;
     }
-
-    private final Cart cart = new Cart();
 
     public void start() {
         Scanner sc = new Scanner(System.in);
@@ -81,7 +81,7 @@ public class Kiosk {
                     int orderChoice = sc.nextInt();
                     if (orderChoice == 1) {
                         System.out.println("주문이 완료되었습니다. 금액은 W " + cart.getCartTotalPrice() + " 입니다.");
-                        break;
+                        cart.cartClear();
                     } else if (orderChoice == 2) {
                         System.out.println("메뉴판으로 돌아갑니다.");
                     }
@@ -100,6 +100,7 @@ public class Kiosk {
             }
 
         }
+        sc.close();
 
     }
 

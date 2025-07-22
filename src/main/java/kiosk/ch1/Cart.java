@@ -39,22 +39,22 @@ public class Cart {
         }
     }
 
-    //아이템 빼기
-    public void decreaseItemQuantity(CartItem itemToRemove) {
-        Optional<CartItem> existingItem = findCartItem(itemToRemove.getMenuItemId());
-
-        if(existingItem.isEmpty()) {
-            System.out.println("해당 아이템이 카트에 없습니다.");
-            return;
-        }
-
-        CartItem item = existingItem.get();
-        item.decreaseQuantity(item.getQuantity());
-
-        if(item.getQuantity() <= 0) {
-            this.cartItems.remove(item);
-        }
-    }
+//    //아이템 빼기
+//    public void decreaseItemQuantity(CartItem itemToRemove) {
+//        Optional<CartItem> existingItem = findCartItem(itemToRemove.getMenuItemId());
+//
+//        if(existingItem.isEmpty()) {
+//            System.out.println("해당 아이템이 카트에 없습니다.");
+//            return;
+//        }
+//
+//        CartItem item = existingItem.get();
+//        item.decreaseQuantity(item.getQuantity());
+//
+//        if(item.getQuantity() <= 0) {
+//            this.cartItems.remove(item);
+//        }
+//    }
 
     //카트에 담긴 총 금액 확인
     public BigDecimal getCartTotalPrice() {
