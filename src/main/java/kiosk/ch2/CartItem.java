@@ -49,10 +49,10 @@ public class CartItem {
         if(quantity > 0) {this.quantity += quantity;}
     }
 
-//    // - 갯수 계산
-//    public void decreaseQuantity(int quantity) {
-//        if(quantity > 0) {this.quantity -= quantity;}
-//
-//    }
+    // - 갯수 계산
+    public void decreaseQuantity(int quantity) {
+        if(quantity > 0) {this.quantity -= quantity;}
+
+    }
 
 }

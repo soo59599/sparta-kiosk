@@ -1,6 +1,5 @@
 package kiosk.ch2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
@@ -20,7 +19,7 @@ public class Menu {
     }
 
     public List<MenuItem> getMenuItems() {
-        return new ArrayList<>(menuItems);
+        return menuItems.stream().toList();
     }
 
     // Setter

@@ -4,20 +4,29 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Cart {
 
-    private final List<CartItem> cartItems;
+    private List<CartItem> cartItems;
 
     //생성자
     public Cart(){
-        this.cartItems = new ArrayList<>();
+        this.cartItems.stream().collect(Collectors.toList());
     }
 
     //장바구니 목록 보기
     public List<CartItem> getCartItems() {
-        return new ArrayList<>(cartItems);
+        return cartItems.stream().collect(Collectors.toList());
     }
+
+    //카트에서 특정 이름을 가진 아이템 제거
+    public void removeCartItem(CartItem cartItem) {
+        cartItems = cartItems.stream()
+                .filter(item -> !item.getMenuItemName().equals(cartItem.getMenuItemName()))
+                .collect(Collectors.toList());
+    }
+
 
     //카트안에 아이템 있는지 찾기
     private Optional<CartItem> findCartItem(String menuItemId) {
@@ -39,22 +48,18 @@ public class Cart {
         }
     }
 
-//    //아이템 빼기
-//    public void decreaseItemQuantity(CartItem itemToRemove) {
-//        Optional<CartItem> existingItem = findCartItem(itemToRemove.getMenuItemId());
-//
-//        if(existingItem.isEmpty()) {
-//            System.out.println("해당 아이템이 카트에 없습니다.");
-//            return;
-//        }
-//
-//        CartItem item = existingItem.get();
-//        item.decreaseQuantity(item.getQuantity());
-//
-//        if(item.getQuantity() <= 0) {
-//            this.cartItems.remove(item);
-//        }
-//    }
+    //아이템 빼기
+    public void decreaseItemQuantity(CartItem cartItemToDecrease) {
+        cartItems.stream()
+                .filter(item -> item.getMenuItemId().equals(cartItemToDecrease.getMenuItemId()))
+                .findFirst()
+                .ifPresentOrElse(foundItem->{
+                    foundItem.decreaseQuantity(cartItemToDecrease.getQuantity());
+                    if(foundItem.getQuantity()<=0){
+                        this.cartItems.remove(foundItem);
+                    }
+                }, ()-> System.out.println("해당 아이템이 카트에 없습니다."));
+    }
 
     //카트에 담긴 총 금액 확인
     public BigDecimal getCartTotalPrice() {
