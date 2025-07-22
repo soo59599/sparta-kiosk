@@ -79,8 +79,13 @@ public class Kiosk {
                     displayCart();
                     System.out.println("1. 주문      2. 메뉴판");
                     int orderChoice = sc.nextInt();
+                    sc.nextLine(); //버퍼 지우기
                     if (orderChoice == 1) {
-                        System.out.println("주문이 완료되었습니다. 금액은 W " + cart.getCartTotalPrice() + " 입니다.");
+                        displayDiscountRateMenu();
+                        int userTypeChoice = sc.nextInt();
+                        sc.nextLine(); //버퍼 지우기
+                        UserType userType = UserType.values()[userTypeChoice - 1];
+                        System.out.println("주문이 완료되었습니다. 금액은 W " + userType.getDiscountedPrice(cart.getCartTotalPrice()) + " 입니다.");
                         cart.cartClear();
                     } else if (orderChoice == 2) {
                         System.out.println("메뉴판으로 돌아갑니다.");
@@ -142,5 +147,13 @@ public class Kiosk {
         }
         System.out.println("[ Total ]");
         System.out.println("W " + cart.getCartTotalPrice());
+    }
+
+    //할인정보 출력
+    public void displayDiscountRateMenu() {
+        System.out.println("할인 정보를 입력해주세요.");
+        for(int i = 0 ; i <UserType.values().length ; i++){
+            System.out.println((i + 1) + ". " + UserType.values()[i].getDisplayName()+" : "+UserType.values()[i].getDiscountPercent()+"%");
+        }
     }
 }
