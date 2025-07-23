@@ -25,6 +25,10 @@ public class CartItem<T extends MenuItem> {
         return item.getId();
     }
 
+    public T getItem() {
+        return item;
+    }
+
     public String getMenuItemName() {
         return item.getName();
     }

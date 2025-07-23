@@ -123,7 +123,7 @@ public class Kiosk {
         }
         System.out.println("[ Total ]");
         System.out.println("W " + cart.getCartTotalPrice());
-        System.out.println("1. 주문      2. 메뉴판");
+        System.out.println("1. 주문      2. 메뉴판      3.수량 조절");
     }
 
     //할인정보 출력
@@ -192,6 +192,8 @@ public class Kiosk {
             //주문하기에서 뒤로가기
         } else if (selectedOrderOption == 2) {
             System.out.println("메뉴판으로 돌아갑니다.");
+        }else if (selectedOrderOption == 3) {
+            adjustCartItemQuantity();
         }
     }
 
@@ -221,4 +223,63 @@ public class Kiosk {
         cart.cartClear();
         System.out.println("장바구니를 비웠습니다.");
     }
+
+    //장바구니 아이템 수량 바꾸기
+    private void adjustCartItemQuantity() {
+        List<CartItem<MenuItem>> items = cart.getCartItems();
+
+        if (items.isEmpty()) {
+            System.out.println("장바구니가 비어있습니다.");
+            return;
+        }
+
+        // 장바구니 목록 출력
+        System.out.println("[ Orders ]");
+        for (int i = 0; i < items.size(); i++) {
+            CartItem<MenuItem> item = items.get(i);
+            System.out.printf("%d. %-15s | W %6.1f | %d개 | %s%n",
+                    i + 1, item.getMenuItemName(), item.getMenuItemPrice(), item.getQuantity(), item.getMenuItemDescription());
+        }
+
+        System.out.println("수량을 변경할 메뉴 번호를 입력해주세요:");
+        int selectedIndex = getInt() - 1;
+
+        if (selectedIndex < 0 || selectedIndex >= items.size()) {
+            System.out.println("잘못된 입력입니다.");
+            return;
+        }
+
+        CartItem<MenuItem> selectedItem = items.get(selectedIndex);
+
+        System.out.println("수량을 어떻게 변경하시겠습니까?");
+        System.out.println("1. 증가     2. 감소     3. 취소");
+
+        int option = getInt();
+
+        if (option == 3) {
+            System.out.println("수량 변경을 취소했습니다.");
+            return;
+        }
+
+        System.out.println("변경할 수량을 입력해주세요:");
+        int quantity = getInt();
+
+        if (quantity <= 0) {
+            System.out.println("0보다 큰 수를 입력해주세요.");
+            return;
+        }
+
+        CartItem<MenuItem> updateRequest = new CartItem<>(selectedItem.getItem(), quantity);
+
+        if (option == 1) {
+            cart.increaseItemQuantity(updateRequest);
+            System.out.println("수량이 증가되었습니다.");
+        } else if (option == 2) {
+            cart.decreaseItemQuantity(updateRequest);
+            System.out.println("수량이 감소되었습니다.");
+        } else {
+            System.out.println("잘못된 입력입니다.");
+        }
+    }
+
 }
