@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Kiosk {
 
     private final List<Menu> menus;
-    private final Cart cart = new Cart();
+    private final Cart<MenuItem> cart = new Cart<>();
 
 
     public Kiosk(List<Menu> menus) {
@@ -22,10 +22,7 @@ public class Kiosk {
                 //메인 메뉴 출력
                 displayMainMenu();
 
-                //장바구니에 아이템이 있을 때 오더 메뉴 출력
-                if (!cart.getCartItems().isEmpty()) {
-                    displayOrderMenu();
-                }
+
 
                 //첫번째 선택:메인에서 카테고리 고르기 (인덱스 편의를 위해 -1)
                 //메인 메뉴에서 카테고리 선택 (1~3: 카테고리, 4: 주문, 5: 장바구니 비우기, 0: 종료)
@@ -64,7 +61,7 @@ public class Kiosk {
                         //선택한 아이템 장바구니 추가
                         if (cartItemChoice == 1) {
                             System.out.println(chosenItem.getName() + " 이 장바구니에 추가되었습니다.");
-                            cart.increaseItemQuantity(new CartItem(chosenItem, 1));
+                            cart.increaseItemQuantity(new CartItem<>(chosenItem, 1));
 
                         } else if (cartItemChoice == 2) {
                             //장바구니 담기에서 뒤로가기 선택
@@ -94,6 +91,11 @@ public class Kiosk {
                         //다섯번째 선택: UserType 선택
                         int userTypeChoice = sc.nextInt();
                         sc.nextLine(); //버퍼 지우기
+
+                        if(userTypeChoice<1 || userTypeChoice > UserType.values().length) {
+                            System.out.println("잘못된 입력입니다.");
+                            continue;
+                        }
 
                         //주문 완료
                         UserType userType = UserType.values()[userTypeChoice - 1];
@@ -134,6 +136,11 @@ public class Kiosk {
         }
         System.out.println("0. 종료");
 
+        //장바구니에 아이템이 있을 때 오더 메뉴 출력
+        if (!cart.getCartItems().isEmpty()) {
+            displayOrderMenu();
+        }
+
     }
 
     //카테고리 출력 메서드
@@ -159,7 +166,7 @@ public class Kiosk {
         System.out.println("아래와 같이 주문 하시겠습니까?\n");
         System.out.println("[ Orders ]");
         for (int i = 0; i < cart.getCartItems().size(); i++) {
-            CartItem cartItem = cart.getCartItems().get(i);
+            CartItem<MenuItem> cartItem = cart.getCartItems().get(i);
             System.out.printf("%d. %-15s | W %6.1f | %d개 | %s%n", i + 1, cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getQuantity(), cartItem.getMenuItemDescription());
         }
         System.out.println("[ Total ]");

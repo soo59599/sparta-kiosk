@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Cart {
+public class Cart<T extends MenuItem> {
 
-    private List<CartItem> cartItems;
+    private List<CartItem<T>> cartItems;
 
     //생성자
     public Cart() {
@@ -16,19 +16,21 @@ public class Cart {
     }
 
     //장바구니 목록 보기
-    public List<CartItem> getCartItems() {
+    public List<CartItem<T>> getCartItems() {
         return cartItems.stream().collect(Collectors.toList());
     }
 
     //아이템 몇개 넣기(Id 기준)
-    public void increaseItemQuantity(CartItem cartItemToAdd) {
-        cartItems.stream().filter(item -> item.getMenuItemId().equals(cartItemToAdd.getMenuItemId()))
+    public void increaseItemQuantity(CartItem<T> cartItemToAdd) {
+        cartItems.stream()
+                .filter(item -> item.getMenuItemId()
+                        .equals(cartItemToAdd.getMenuItemId()))
                 .findFirst()
                 .ifPresentOrElse(foundItem -> foundItem.increaseQuantity(cartItemToAdd.getQuantity()), () -> cartItems.add(cartItemToAdd));
     }
 
     //아이템 몇개 빼기(Id 기준)
-    public void decreaseItemQuantity(CartItem cartItemToDecrease) {
+    public void decreaseItemQuantity(CartItem<T> cartItemToDecrease) {
         cartItems.stream()
                 .filter(item -> item.getMenuItemId().equals(cartItemToDecrease.getMenuItemId()))
                 .findFirst()
@@ -44,7 +46,7 @@ public class Cart {
     }
 
     //아이템 전부 빼기(name 기준)
-    public void deleteItem(CartItem cartItemToDelete) {
+    public void deleteItem(CartItem<T> cartItemToDelete) {
         //필터로 새 리스트를 만들어서 반환
 //        cartItems = cartItems.stream()
 //                .filter(item -> !item.getMenuItemName().equals(cartItemToDelete.getMenuItemName()))
