@@ -16,7 +16,6 @@ public class Kiosk {
     }
 
     public void start() {
-
         while (true) {
             try {
                 if(!handleMainMenu()) {
@@ -140,71 +139,77 @@ public class Kiosk {
         displayCategoryMenu(selectedMenu);
 
         //두번째 선택: 아이템고르기 (인덱스 편의를 위해 -1)
-        int itemChoice = getInt() - 1;
+        int selectedItemIndex = getInt() - 1;
 
         //카테고리 메뉴에서 뒤로가기 선택
-        if (itemChoice == -1) {
+        if (selectedItemIndex == -1) {
             return ;
         }
 
         //선택한 아이템 정보 출력
-        if (-1 < itemChoice && itemChoice < selectedMenu.getMenuItems().size()) {
-            MenuItem selectedItem = selectedMenu.getMenuItems().get(itemChoice);
-            System.out.printf("선택한 메뉴: %s | W %.1f | %s%n", selectedItem.getName(), selectedItem.getPrice(), selectedItem.getDescription());
-            System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
-            System.out.println("1. 확인        2. 취소");
+        if (-1 < selectedItemIndex && selectedItemIndex < selectedMenu.getMenuItems().size()) {
+            MenuItem selectedItem = selectedMenu.getMenuItems().get(selectedItemIndex);
+            handleAddToCartDecision(selectedItem);
+        } else {
+            throw new IllegalArgumentException("잘못된 입력입니다.");
+        }
+    }
 
-            //세번째 선택: 장바구니 담기
-            int cartItemChoice = getInt();
+    //선택한 아이템 정보 출력, 장바구니에 추가여부 확인
+    public void handleAddToCartDecision(MenuItem selectedItem){
+        System.out.printf("선택한 메뉴: %s | W %.1f | %s%n", selectedItem.getName(), selectedItem.getPrice(), selectedItem.getDescription());
+        System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
+        System.out.println("1. 확인        2. 취소");
 
-            //선택한 아이템 장바구니 추가
-            if (cartItemChoice == 1) {
-                System.out.println(selectedItem.getName() + " 이 장바구니에 추가되었습니다.");
-                cart.increaseItemQuantity(new CartItem<>(selectedItem, 1));
+        //세번째 선택: 장바구니 담기
+        int selectedCartOption  = getInt();
 
-            } else if (cartItemChoice == 2) {
-                //장바구니 담기에서 뒤로가기 선택
-                System.out.println("메인 메뉴로 돌아갑니다.");
+        //선택한 아이템 장바구니 추가
+        if (selectedCartOption  == 1) {
+            System.out.println(selectedItem.getName() + " 이 장바구니에 추가되었습니다.");
+            cart.increaseItemQuantity(new CartItem<>(selectedItem, 1));
 
-            } else {
-                throw new IllegalArgumentException("잘못된 입력입니다.");
-            }
+        } else if (selectedCartOption  == 2) {
+            //장바구니 담기에서 뒤로가기 선택
+            System.out.println("메인 메뉴로 돌아갑니다.");
 
         } else {
             throw new IllegalArgumentException("잘못된 입력입니다.");
         }
     }
 
+    //주문 출력 및 할인 유형 선택
     public void handleOrderMenu(){
         displayCart();
 
         //네번째 선택: 주문하기
-        int orderChoice = getInt();
+        int selectedOrderOption = getInt();
 
         //주문하기 선택시 출력
-        if (orderChoice == 1) {
+        if (selectedOrderOption == 1) {
             displayDiscountRateMenu();
 
             //다섯번째 선택: UserType 선택
-            int userTypeChoice = getInt();
+            int selectedUserTypeIndex = getInt();
 
             //UserType를 넘어선 번호 입력
-            if(userTypeChoice<1 || userTypeChoice > UserType.values().length) {
+            if(selectedUserTypeIndex<1 || selectedUserTypeIndex > UserType.values().length) {
                 System.out.println("잘못된 입력입니다.");
                 return;
             }
 
             //주문 완료
-            UserType userType = UserType.values()[userTypeChoice - 1];
+            UserType userType = UserType.values()[selectedUserTypeIndex - 1];
             System.out.println("주문이 완료되었습니다. 금액은 W " + userType.getDiscountedPrice(cart.getCartTotalPrice()) + " 입니다.");
             cart.cartClear();
 
             //주문하기에서 뒤로가기
-        } else if (orderChoice == 2) {
+        } else if (selectedOrderOption == 2) {
             System.out.println("메뉴판으로 돌아갑니다.");
         }
     }
 
+    //장바구니 비우기
     public void handleClearCart() {
         cart.cartClear();
         System.out.println("장바구니를 비웠습니다.");
