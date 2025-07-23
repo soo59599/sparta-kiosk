@@ -24,14 +24,26 @@ public class Kiosk {
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
-            } catch (InputMismatchException e) {
-                System.out.println("숫자를 입력해주세요.");
-                sc.nextLine(); // 버퍼 비우기
             }
         }
         sc.close();
     }
 
+    //숫자 유효성 검사
+    private int getInt(){
+        while (true) {
+            try {
+                int input = sc.nextInt();
+                sc.nextLine(); //버퍼 처리
+                return input;
+            }catch (InputMismatchException e) {
+                System.out.println("숫자를 입력해주세요.");
+                sc.nextLine();
+            }
+        }
+    }
+
+    //메인 메뉴 선택지 관리
     public boolean handleMainMenu() {
 
         //메인 메뉴 출력
@@ -39,7 +51,7 @@ public class Kiosk {
 
         //첫번째 선택:메인에서 카테고리 고르기 (인덱스 편의를 위해 -1)
         //메인 메뉴에서 카테고리 선택 (1~3: 카테고리, 4: 주문, 5: 장바구니 비우기, 0: 종료)
-        int selectedCategoryIndex = sc.nextInt() - 1;
+        int selectedCategoryIndex = getInt() - 1;
 
         //메인메뉴에서 종료(0) 선택
         if (selectedCategoryIndex == -1) {
@@ -122,12 +134,13 @@ public class Kiosk {
         }
     }
 
+    //메인메뉴에서 카테고리(1~3) 선택
     public void handleCategorySelection(int selectedCategoryIndex){
         Menu selectedMenu = menus.get(selectedCategoryIndex);
         displayCategoryMenu(selectedMenu);
 
-        //선택: 아이템고르기 (인덱스 편의를 위해 -1)
-        int itemChoice = sc.nextInt() - 1;
+        //두번째 선택: 아이템고르기 (인덱스 편의를 위해 -1)
+        int itemChoice = getInt() - 1;
 
         //카테고리 메뉴에서 뒤로가기 선택
         if (itemChoice == -1) {
@@ -142,7 +155,7 @@ public class Kiosk {
             System.out.println("1. 확인        2. 취소");
 
             //세번째 선택: 장바구니 담기
-            int cartItemChoice = sc.nextInt();
+            int cartItemChoice = getInt();
 
             //선택한 아이템 장바구니 추가
             if (cartItemChoice == 1) {
@@ -166,16 +179,14 @@ public class Kiosk {
         displayCart();
 
         //네번째 선택: 주문하기
-        int orderChoice = sc.nextInt();
-        sc.nextLine(); //버퍼 지우기
+        int orderChoice = getInt();
 
         //주문하기 선택시 출력
         if (orderChoice == 1) {
             displayDiscountRateMenu();
 
             //다섯번째 선택: UserType 선택
-            int userTypeChoice = sc.nextInt();
-            sc.nextLine(); //버퍼 지우기
+            int userTypeChoice = getInt();
 
             //UserType를 넘어선 번호 입력
             if(userTypeChoice<1 || userTypeChoice > UserType.values().length) {
