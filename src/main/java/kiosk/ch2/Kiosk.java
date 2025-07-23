@@ -10,7 +10,6 @@ public class Kiosk {
     private final Cart<MenuItem> cart = new Cart<>();
     private final Scanner sc = new Scanner(System.in);
 
-
     public Kiosk(List<Menu> menus) {
         this.menus = menus;
     }
@@ -26,20 +25,6 @@ public class Kiosk {
             }
         }
         sc.close();
-    }
-
-    //숫자 유효성 검사
-    private int getInt(){
-        while (true) {
-            try {
-                int input = sc.nextInt();
-                sc.nextLine(); //버퍼 처리
-                return input;
-            }catch (InputMismatchException e) {
-                System.out.println("숫자를 입력해주세요.");
-                sc.nextLine();
-            }
-        }
     }
 
     //메인 메뉴 선택지 관리
@@ -78,6 +63,22 @@ public class Kiosk {
         return true;
 
     }
+
+    //숫자 유효성 검사
+    private int getInt(){
+        while (true) {
+            try {
+                int input = sc.nextInt();
+                sc.nextLine(); //버퍼 처리
+                return input;
+            }catch (InputMismatchException e) {
+                System.out.println("숫자를 입력해주세요.");
+                sc.nextLine();
+            }
+        }
+    }
+
+
 
     //메인메뉴 출력 메서드
     private void displayMainMenu() {
