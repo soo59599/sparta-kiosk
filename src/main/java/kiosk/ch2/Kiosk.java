@@ -43,7 +43,7 @@ public class Kiosk {
     }
 
     //메인 메뉴 선택지 관리
-    public boolean handleMainMenu() {
+    private boolean handleMainMenu() {
 
         //메인 메뉴 출력
         displayMainMenu();
@@ -69,7 +69,7 @@ public class Kiosk {
 
             //메인메뉴에서 장바구니 비우기(5) 선택
         } else if (!cart.getCartItems().isEmpty() && selectedCategoryIndex == 4) {
-            handleClearCart();
+            clearCart();
 
         } else {
             throw new IllegalArgumentException("잘못된 입력입니다.");
@@ -80,7 +80,7 @@ public class Kiosk {
     }
 
     //메인메뉴 출력 메서드
-    public void displayMainMenu() {
+    private void displayMainMenu() {
         System.out.println("[ MAIN MENU ]");
         for (int i = 0; i < this.menus.size(); i++) {
             System.out.println((i + 1) + ". " + menus.get(i).getCategory());
@@ -95,7 +95,7 @@ public class Kiosk {
     }
 
     //카테고리 출력 메서드
-    public void displayCategoryMenu(Menu menu) {
+    private void displayCategoryMenu(Menu menu) {
         System.out.println("\n[ " + menu.getCategory() + " MENU ]");
 
         for (int i = 0; i < menu.getMenuItems().size(); i++) {
@@ -106,14 +106,14 @@ public class Kiosk {
     }
 
     //오더메뉴 출력 메서드
-    public void displayOrderMenu() {
+    private void displayOrderMenu() {
         System.out.println("[ ORDER MENU ]");
         System.out.println("4. Orders       | 장바구니를 확인 후 주문합니다.");
         System.out.println("5. Cancel       | 진행중인 주문을 취소합니다.");
     }
 
     //장바구니 출력
-    public void displayCart() {
+    private void displayCart() {
         System.out.println("아래와 같이 주문 하시겠습니까?\n");
         System.out.println("[ Orders ]");
         for (int i = 0; i < cart.getCartItems().size(); i++) {
@@ -126,15 +126,15 @@ public class Kiosk {
     }
 
     //할인정보 출력
-    public void displayDiscountRateMenu() {
+    private void displayDiscountRateMenu() {
         System.out.println("할인 정보를 입력해주세요.");
         for (int i = 0; i < UserType.values().length; i++) {
-            System.out.println((i + 1) + ". " + UserType.values()[i].getDisplayName() + " : " + UserType.values()[i].getDiscountPercent() + "%");
+            System.out.println((i + 1) + ". " + UserType.values()[i].getDisplayName() + " : " + UserType.values()[i].getDiscountPercent().intValue() + "%");
         }
     }
 
     //메인메뉴에서 카테고리(1~3) 선택
-    public void handleCategorySelection(int selectedCategoryIndex){
+    private void handleCategorySelection(int selectedCategoryIndex){
         Menu selectedMenu = menus.get(selectedCategoryIndex);
         displayCategoryMenu(selectedMenu);
 
@@ -156,7 +156,7 @@ public class Kiosk {
     }
 
     //선택한 아이템 정보 출력, 장바구니에 추가여부 확인
-    public void handleAddToCartDecision(MenuItem selectedItem){
+    private void handleAddToCartDecision(MenuItem selectedItem){
         System.out.printf("선택한 메뉴: %s | W %.1f | %s%n", selectedItem.getName(), selectedItem.getPrice(), selectedItem.getDescription());
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println("1. 확인        2. 취소");
@@ -178,8 +178,8 @@ public class Kiosk {
         }
     }
 
-    //주문 출력 및 할인 유형 선택
-    public void handleOrderMenu(){
+    //주문 출력
+    private void handleOrderMenu(){
         displayCart();
 
         //네번째 선택: 주문하기
@@ -187,30 +187,36 @@ public class Kiosk {
 
         //주문하기 선택시 출력
         if (selectedOrderOption == 1) {
-            displayDiscountRateMenu();
-
-            //다섯번째 선택: UserType 선택
-            int selectedUserTypeIndex = getInt();
-
-            //UserType를 넘어선 번호 입력
-            if(selectedUserTypeIndex<1 || selectedUserTypeIndex > UserType.values().length) {
-                System.out.println("잘못된 입력입니다.");
-                return;
-            }
-
-            //주문 완료
-            UserType userType = UserType.values()[selectedUserTypeIndex - 1];
-            System.out.println("주문이 완료되었습니다. 금액은 W " + userType.getDiscountedPrice(cart.getCartTotalPrice()) + " 입니다.");
-            cart.cartClear();
-
+            checkout();
             //주문하기에서 뒤로가기
         } else if (selectedOrderOption == 2) {
             System.out.println("메뉴판으로 돌아갑니다.");
         }
     }
 
+    //UserType 확인, 할인율 계산, 최종금액
+    private void checkout(){
+        displayDiscountRateMenu();
+
+        //다섯번째 선택: UserType 선택
+        int selectedUserTypeIndex = getInt();
+
+        //UserType를 넘어선 번호 입력
+        if(selectedUserTypeIndex<1 || selectedUserTypeIndex > UserType.values().length) {
+            System.out.println("잘못된 입력입니다.");
+            return;
+        }
+
+        //주문 완료
+        UserType userType = UserType.values()[selectedUserTypeIndex - 1];
+        System.out.println("주문이 완료되었습니다. 금액은 W " + userType.getDiscountedPrice(cart.getCartTotalPrice()) + " 입니다.");
+
+        //장바구니 초기화
+        cart.cartClear();
+    }
+
     //장바구니 비우기
-    public void handleClearCart() {
+    private void clearCart() {
         cart.cartClear();
         System.out.println("장바구니를 비웠습니다.");
     }
