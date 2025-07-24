@@ -37,12 +37,14 @@ public class Cart<T extends MenuItem> {
                 .ifPresentOrElse(foundItem -> {
                     foundItem.decreaseQuantity(cartItemToDecrease.getQuantity()); //수량 감소
 
+                    //아이템 갯수가 0이거나 음수일 때 장바구니에서 제거
                     if (foundItem.getQuantity() <= 0) {
-                        cartItems.remove(foundItem); //수량이 0 이하가 되면 장바구니에서 제거
+                        cartItems.remove(foundItem);
+                        System.out.println("수량이 0개 이하로 변경되어 장바구니에서 제거되었습니다.");
                     }
 
 
-                }, () -> System.out.println("해당 아이템이 카트에 없습니다.")); //찾는 항목이 없을 때
+                }, () -> System.out.println("해당 아이템이 장바구니에 없습니다.")); //찾는 항목이 없을 때
     }
 
     //아이템 전부 빼기(name 기준)
@@ -55,18 +57,18 @@ public class Cart<T extends MenuItem> {
 //        //removeIf활용
 //        cartItems.removeIf(item -> item.getMenuItemName().equals(cartItemToDelete.getMenuItemName()));
 
-        // 동일 이름의 아이템은 카트에 하나만 담겨있음->하나만 제거해도 모두 제거됨
+        // 동일 이름의 아이템은 장바구니에 하나만 담겨있음->하나만 제거해도 모두 제거됨
         cartItems.stream().filter(item -> item.getMenuItemName().equals(cartItemToDelete.getMenuItemName())).findFirst().ifPresent(cartItems::remove);
     }
 
-    //카트에 담긴 총 금액 확인
+    //장바구니에 담긴 총 금액 확인
     public BigDecimal getCartTotalPrice() {
         return cartItems.stream()
                 .map(CartItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    //현재 주문취소(카트 비우기)
+    //현재 주문취소(장바구니 비우기)
     public void cartClear() {
         cartItems.clear();
     }

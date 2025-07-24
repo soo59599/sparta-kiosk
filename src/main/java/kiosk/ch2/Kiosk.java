@@ -17,7 +17,7 @@ public class Kiosk {
     public void start() {
         while (true) {
             try {
-                if(!handleMainMenu()) {
+                if (!handleMainMenu()) {
                     break;
                 }
             } catch (IllegalArgumentException e) {
@@ -65,19 +65,18 @@ public class Kiosk {
     }
 
     //숫자 유효성 검사
-    private int getInt(){
+    private int getInt() {
         while (true) {
             try {
                 int input = sc.nextInt();
                 sc.nextLine(); //버퍼 처리
                 return input;
-            }catch (InputMismatchException e) {
+            } catch (InputMismatchException e) {
                 System.out.println("숫자를 입력해주세요.");
                 sc.nextLine();
             }
         }
     }
-
 
 
     //메인메뉴 출력 메서드
@@ -117,8 +116,9 @@ public class Kiosk {
     private void displayCart() {
         System.out.println("아래와 같이 주문 하시겠습니까?\n");
         System.out.println("[ Orders ]");
+        List<CartItem<MenuItem>> cartItems = cart.getCartItems();
         for (int i = 0; i < cart.getCartItems().size(); i++) {
-            CartItem<MenuItem> cartItem = cart.getCartItems().get(i);
+            CartItem<MenuItem> cartItem = cartItems.get(i);
             System.out.printf("%d. %-15s | W %6.1f | %d개 | %s%n", i + 1, cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getQuantity(), cartItem.getMenuItemDescription());
         }
         System.out.println("[ Total ]");
@@ -135,7 +135,7 @@ public class Kiosk {
     }
 
     //메인메뉴에서 카테고리(1~3) 선택
-    private void handleCategorySelection(int selectedCategoryIndex){
+    private void handleCategorySelection(int selectedCategoryIndex) {
         Menu selectedMenu = menus.get(selectedCategoryIndex);
         displayCategoryMenu(selectedMenu);
 
@@ -144,7 +144,7 @@ public class Kiosk {
 
         //카테고리 메뉴에서 뒤로가기 선택
         if (selectedItemIndex == -1) {
-            return ;
+            return;
         }
 
         //선택한 아이템 정보 출력
@@ -157,20 +157,20 @@ public class Kiosk {
     }
 
     //선택한 아이템 정보 출력, 장바구니에 추가여부 확인
-    private void handleAddToCartDecision(MenuItem selectedItem){
+    private void handleAddToCartDecision(MenuItem selectedItem) {
         System.out.printf("선택한 메뉴: %s | W %.1f | %s%n", selectedItem.getName(), selectedItem.getPrice(), selectedItem.getDescription());
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println("1. 확인        2. 취소");
 
         //세번째 선택: 장바구니 담기
-        int selectedCartOption  = getInt();
+        int selectedCartOption = getInt();
 
         //선택한 아이템 장바구니 추가
-        if (selectedCartOption  == 1) {
+        if (selectedCartOption == 1) {
             System.out.println(selectedItem.getName() + " 이 장바구니에 추가되었습니다.");
             cart.increaseItemQuantity(new CartItem<>(selectedItem, 1));
 
-        } else if (selectedCartOption  == 2) {
+        } else if (selectedCartOption == 2) {
             //장바구니 담기에서 뒤로가기 선택
             System.out.println("메인 메뉴로 돌아갑니다.");
 
@@ -180,7 +180,7 @@ public class Kiosk {
     }
 
     //주문 출력
-    private void handleOrderMenu(){
+    private void handleOrderMenu() {
         displayCart();
 
         //네번째 선택: 주문하기
@@ -192,20 +192,20 @@ public class Kiosk {
             //주문하기에서 뒤로가기
         } else if (selectedOrderOption == 2) {
             System.out.println("메뉴판으로 돌아갑니다.");
-        }else if (selectedOrderOption == 3) {
+        } else if (selectedOrderOption == 3) {
             adjustCartItemQuantity();
         }
     }
 
     //UserType 확인, 할인율 계산, 최종금액
-    private void checkout(){
+    private void checkout() {
         displayDiscountRateMenu();
 
         //다섯번째 선택: UserType 선택
         int selectedUserTypeIndex = getInt();
 
         //UserType를 넘어선 번호 입력
-        if(selectedUserTypeIndex<1 || selectedUserTypeIndex > UserType.values().length) {
+        if (selectedUserTypeIndex < 1 || selectedUserTypeIndex > UserType.values().length) {
             System.out.println("잘못된 입력입니다.");
             return;
         }
@@ -226,60 +226,84 @@ public class Kiosk {
 
     //장바구니 아이템 수량 바꾸기
     private void adjustCartItemQuantity() {
-        List<CartItem<MenuItem>> items = cart.getCartItems();
+        List<CartItem<MenuItem>> cartItems = cart.getCartItems();
 
-        if (items.isEmpty()) {
-            System.out.println("장바구니가 비어있습니다.");
+        if (cartItems.size() == 0) {
+            System.out.println("장바구니가 비었습니다.");
             return;
         }
 
-        // 장바구니 목록 출력
+        //현재 장바구니
+        CartItem<MenuItem> cartItem;
         System.out.println("[ Orders ]");
-        for (int i = 0; i < items.size(); i++) {
-            CartItem<MenuItem> item = items.get(i);
-            System.out.printf("%d. %-15s | W %6.1f | %d개 | %s%n",
-                    i + 1, item.getMenuItemName(), item.getMenuItemPrice(), item.getQuantity(), item.getMenuItemDescription());
+        for (int i = 0; i < cart.getCartItems().size(); i++) {
+            cartItem = cartItems.get(i);
+            System.out.printf("%d. %-15s | W %6.1f | %d개 | %s%n", i + 1, cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getQuantity(), cartItem.getMenuItemDescription());
         }
 
-        System.out.println("수량을 변경할 메뉴 번호를 입력해주세요:");
-        int selectedIndex = getInt() - 1;
 
-        if (selectedIndex < 0 || selectedIndex >= items.size()) {
+        System.out.println("수량 조절할 아이템 번호를 고르세요");
+
+        //선택: 장바구니 아이템 중 고르기(인덱스 편의를 위해 -1)
+        int selectCartItem = getInt() - 1;
+
+        //잘못된 입력 예외처리
+        if (selectCartItem >= cartItems.size() || selectCartItem < 0) {
             System.out.println("잘못된 입력입니다.");
             return;
         }
 
-        CartItem<MenuItem> selectedItem = items.get(selectedIndex);
+        //선택한 장바구니 아이템
+        cartItem = cartItems.get(selectCartItem);
 
-        System.out.println("수량을 어떻게 변경하시겠습니까?");
-        System.out.println("1. 증가     2. 감소     3. 취소");
+        System.out.println("1. 수량 추가   2. 수량 감소  3. 해당 아이템 장바구니에서 삭제  4. 뒤로 가기");
 
-        int option = getInt();
+        //선택: 원하는 옵션 선택
+        int selectedCartOption = getInt();
 
-        if (option == 3) {
-            System.out.println("수량 변경을 취소했습니다.");
+        //잘못된 입력 예외처리
+        if (selectedCartOption < 1 || selectedCartOption > 4) {
+            System.out.println("잘못된 입력입니다.");
             return;
         }
 
-        System.out.println("변경할 수량을 입력해주세요:");
-        int quantity = getInt();
-
-        if (quantity <= 0) {
-            System.out.println("0보다 큰 수를 입력해주세요.");
+        //뒤로 가기
+        if (selectedCartOption == 4) {
             return;
         }
 
-        CartItem<MenuItem> updateRequest = new CartItem<>(selectedItem.getItem(), quantity);
+        //해당 아이템 장바구니에서 삭제
+        if (selectedCartOption == 3) {
+            cart.deleteItem(cartItem);
+            System.out.println(cartItem.getMenuItemName() + "가 장바구니에서 삭제되었습니다.");
+            return;
+        }
 
-        if (option == 1) {
-            cart.increaseItemQuantity(updateRequest);
-            System.out.println("수량이 증가되었습니다.");
-        } else if (option == 2) {
-            cart.decreaseItemQuantity(updateRequest);
-            System.out.println("수량이 감소되었습니다.");
+        System.out.println("수량을 입력하세요");
+
+        //선택: 변경할 양 선택
+        int selectedQuantity = getInt();
+
+        //잘못된 입력 예외처리
+        if (selectedQuantity < 0) {
+            System.out.println("0보다 큰 수를 입력하세요");
+            return;
+        }
+
+        //수량 추가
+        if (selectedCartOption == 1) {
+            cart.increaseItemQuantity(cartItem);
+            System.out.println(selectedQuantity + "개를 장바구니에 추가했습니다.");
+            System.out.printf(" %-15s | W %6.1f | %d개 | %s%n", cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getQuantity(), cartItem.getMenuItemDescription());
+
+        //수량 감소
         } else {
-            System.out.println("잘못된 입력입니다.");
+            cart.decreaseItemQuantity(cartItem);
+            System.out.println(selectedQuantity + "개를 장바구니에서 제거했습니다.");
+            System.out.printf(" %-15s | W %6.1f | %d개 | %s%n", cartItem.getMenuItemName(), cartItem.getMenuItemPrice(), cartItem.getQuantity(), cartItem.getMenuItemDescription());
+
         }
+
     }
 
 }
